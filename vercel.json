@@ -1,0 +1,8 @@
+{
+  "rewrites": [
+    { "source": "/api/(.*)", "destination": "/backend/$1" }
+  ],
+  "cleanUrls": true,
+  "trailingSlash": false,
+  "outputDirectory": "frontend/dist"
+}
