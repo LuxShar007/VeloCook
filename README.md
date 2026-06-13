@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="frontend/public/logo.png" width="120" height="120" alt="VeloCook Logo" />
+</p>
+
 # VeloCook — AI Cooking To-Do & Budget Feasibility Calculator
 
 VeloCook is a high-fidelity React-based cooking to-do list generator and budget feasibility tool designed with a sophisticated **Management Consulting** theme. It provides an intuitive, centered split-view dashboard to help busy individuals optimize their daily meal architectures and grocery procurement workflows under strict cost boundaries.
