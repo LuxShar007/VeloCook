@@ -8,6 +8,18 @@ VeloCook is a high-fidelity React-based cooking to-do list generator and budget 
 
 ---
 
+## 🛠️ Languages & Technologies Used
+
+VeloCook is built using a modern, multi-language web development stack:
+
+*   **JavaScript (ES6+ / JSX)**: Powers the entire interactive React client dashboard, state machines, browser-side simulators, and dynamic checklist rendering.
+*   **Python (v3.9+)**: Backend server execution language running FastAPI web frameworks, Pydantic type validators, and the Google Gemini API client queries.
+*   **CSS3**: Custom Tailwind CSS styling tokens, custom keyframe loaders, and custom visual responsiveness directives (`@media print` and `@media`).
+*   **HTML5**: Semantic web architecture (`<main>`, `<article>`, `<section>`), dark/bright mode canvas setups, and SEO metadata structures.
+*   **Markdown**: System blueprint plans, developer walkthroughs, and repository readmes.
+
+---
+
 ## 🏛️ System Architecture
 
 The project splits into a responsive, client-side React dashboard and an intelligent, lightweight Python FastAPI server.
@@ -44,14 +56,14 @@ VeloCook/
 
 ---
 
-## 🎨 Theme & UX Specifications ("Management Consulting")
+## 🎨 Theme & UX Specifications ("Bright Consulting Theme")
 
-VeloCook utilizes a premium dark-mode consulting report aesthetic:
-- **Primary Canvas:** Deep Charcoal (`#121212` / `bg-charcoal-900`) for low eye-strain.
-- **Secondary Cards:** Tactile Elevated Charcoal (`#1C1C1E` / `bg-charcoal-800`) with subtle `border-charcoal-700` boundaries.
+VeloCook utilizes a premium bright-mode consulting report aesthetic:
+- **Primary Canvas:** Warm Light Gray (`#f8fafc` / `bg-slate-50`) for a clean, professional corporate look.
+- **Secondary Cards:** Crisp white cards (`#ffffff`) with subtle light boundaries (`border-slate-200/80`).
 - **Typography:** `Inter` (geometric sans-serif readability for data labels) & `Outfit` (clean executive curves for headings).
-- **Accent Emerald (`#10b981`):** Applied exclusively for success states, ROI indicators, and budget-feasible reports.
-- **Accent Red/Amber:** Warns of budget deficits and constraints mismatch.
+- **Accent Emerald (`#10b981`):** Applied for success states, ROI indicators, and budget-feasible reports.
+- **Accent Golden Yellow (`#f59e0b`):** Bright premium warnings, offline indicators, and micro-branding elements.
 - **Interactive Micro-Animations:** Focus-ring highlights on checkboxes, sliding progress tracker bar, and smooth hover elevation cards (`transition-card`).
 
 ---
