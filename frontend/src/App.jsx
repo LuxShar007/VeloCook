@@ -117,7 +117,6 @@ export default function App() {
     checkApi();
   }, []);
 
-  // Preset quick fill options for superior UX
   const fillPreset = (desc, budget) => {
     setDayDescription(desc);
     setMaxBudget(budget);
@@ -130,6 +129,7 @@ export default function App() {
     }));
   };
 
+  // Asynchronous plan generator function matching exact JSON guidelines
   const generatePlan = async (e) => {
     if (e) e.preventDefault();
     setLoading(true);
@@ -142,7 +142,6 @@ export default function App() {
     };
 
     try {
-      // Attempt to hit FastAPI backend
       const response = await fetch('http://localhost:8000/api/generate-plan', {
         method: 'POST',
         headers: {
@@ -181,8 +180,8 @@ export default function App() {
         
         setResult(simulatedPlan);
         setApiOnline(false);
-        setError("Warning: Backend API offline. Viewing high-fidelity simulated response.");
-      }, 600); // Small delay for realistic UX transitions
+        setError("Warning: Backend API offline. Local fallback simulator initialized.");
+      }, 500); 
     } finally {
       setLoading(false);
       setGenerationCount(prev => prev + 1);
@@ -195,17 +194,18 @@ export default function App() {
   const progressPercent = totalGroceryItems > 0 ? Math.round((checkedGroceryItems / totalGroceryItems) * 100) : 0;
 
   return (
-    <div className="min-h-screen bg-[#121212] text-gray-100 font-sans flex flex-col selection:bg-emerald-500 selection:text-black">
+    <div className="min-h-screen bg-[#121212] text-gray-100 font-sans flex flex-col selection:bg-purple-500 selection:text-white">
       {/* Consulting Header */}
       <header className="border-b border-charcoal-700 bg-charcoal-900/50 backdrop-blur-md sticky top-0 z-50 px-6 py-4">
         <div className="max-w-6xl mx-auto flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           <div className="flex items-center gap-3">
-            <div className="p-2 bg-emerald-500/10 border border-emerald-500/20 rounded-md">
-              <Sparkles className="w-6 h-6 text-emerald-500 animate-pulse" />
+            <div className="p-2 bg-purple-500/10 border border-purple-500/20 rounded-md">
+              <Sparkles className="w-6 h-6 text-purple-400 animate-pulse" />
             </div>
             <div>
-              <h1 className="font-sans font-extrabold text-xl tracking-tight text-white flex items-center gap-1.5">
-                MacroByte <span className="text-xs bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 font-medium px-2 py-0.5 rounded">v1.1</span>
+              {/* Crisp Purple Title Accent */}
+              <h1 className="font-sans font-extrabold text-xl tracking-tight text-purple-400 flex items-center gap-1.5">
+                VeloCook <span className="text-xs bg-purple-500/15 border border-purple-500/30 text-purple-300 font-medium px-2 py-0.5 rounded">v1.2</span>
               </h1>
               <p className="text-[10px] tracking-widest text-gray-400 font-bold uppercase">
                 Cooking To-Do Generator & Budget Feasibility
@@ -223,8 +223,8 @@ export default function App() {
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-ping"></span> Live API
               </span>
             ) : (
-              <span className="flex items-center gap-1.5 text-amber-400 font-medium bg-amber-500/10 border border-amber-500/20 px-2.5 py-1 rounded-full" title="Serving local mock data">
-                <span className="w-1.5 h-1.5 rounded-full bg-amber-500"></span> Simulator Active
+              <span className="flex items-center gap-1.5 text-purple-400 font-medium bg-purple-500/10 border border-purple-500/20 px-2.5 py-1 rounded-full" title="Serving local mock data">
+                <span className="w-1.5 h-1.5 rounded-full bg-purple-400"></span> Simulator Active
               </span>
             )}
           </div>
@@ -236,47 +236,48 @@ export default function App() {
         {/* Left Side: Inputs Panel */}
         <section aria-labelledby="inputs-heading" className="lg:col-span-5 bg-charcoal-800/60 border border-charcoal-700/60 rounded-xl p-5 md:p-6 shadow-xl backdrop-blur-sm">
           <div className="flex items-center gap-2 border-b border-charcoal-700/80 pb-4 mb-5">
-            <BookOpen className="w-5 h-5 text-gray-400" />
-            <h2 id="inputs-heading" className="text-lg font-semibold tracking-tight text-white">
+            <BookOpen className="w-5 h-5 text-purple-400" />
+            <h2 id="inputs-heading" className="text-lg font-semibold tracking-tight text-purple-400">
               Model Inputs
             </h2>
           </div>
 
           <form onSubmit={generatePlan} className="space-y-5">
             <div>
-              <label htmlFor="day-desc" className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">
-                Describe Your Day
+              {/* Visible Semantic Label */}
+              <label htmlFor="day-desc" className="block text-xs font-bold text-purple-400 uppercase tracking-wider mb-2">
+                Describe your day layout
               </label>
               <textarea
                 id="day-desc"
-                className="w-full min-h-[110px] bg-charcoal-900 border border-charcoal-700 hover:border-gray-500 focus:focus-ring rounded-lg p-3 text-sm text-gray-100 placeholder-gray-500 resize-none transition-colors"
-                placeholder="e.g. Busy workday with high protein needs, keto diet, or quick lunch..."
+                className="w-full min-h-[110px] bg-charcoal-900 border border-charcoal-700 hover:border-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-purple-500 rounded-lg p-3 text-sm text-gray-100 placeholder-gray-500 resize-none transition-colors"
+                placeholder="Describe your day schedule and targets..."
                 value={dayDescription}
                 onChange={(e) => setDayDescription(e.target.value)}
                 required
               />
               {/* UX Quick Fill Tags */}
               <div className="mt-2.5">
-                <span className="text-[10px] text-gray-500 font-bold uppercase tracking-wider block mb-1.5">Quick Templates:</span>
+                <span className="text-[10px] text-gray-500 font-bold uppercase tracking-wider block mb-1.5">Templates:</span>
                 <div className="flex flex-wrap gap-1.5">
                   <button
                     type="button"
                     onClick={() => fillPreset("Keto day with high-protein lunch and easy dinner", 35.00)}
-                    className="text-xs bg-charcoal-900 hover:bg-charcoal-700/80 border border-charcoal-700 hover:border-gray-500 text-gray-300 px-2.5 py-1 rounded transition-all"
+                    className="text-[11px] bg-charcoal-900 hover:bg-purple-950/20 border border-charcoal-700 hover:border-purple-500 text-gray-300 px-2.5 py-1 rounded transition-all cursor-pointer"
                   >
                     ⚡ Keto ($35)
                   </button>
                   <button
                     type="button"
                     onClick={() => fillPreset("Vegan cleansing day with fresh vegetable focus", 25.00)}
-                    className="text-xs bg-charcoal-900 hover:bg-charcoal-700/80 border border-charcoal-700 hover:border-gray-500 text-gray-300 px-2.5 py-1 rounded transition-all"
+                    className="text-[11px] bg-charcoal-900 hover:bg-purple-950/20 border border-charcoal-700 hover:border-purple-500 text-gray-300 px-2.5 py-1 rounded transition-all cursor-pointer"
                   >
                     🌱 Vegan ($25)
                   </button>
                   <button
                     type="button"
                     onClick={() => fillPreset("Busy corporate meeting day with easy prep comfort food", 18.00)}
-                    className="text-xs bg-charcoal-900 hover:bg-charcoal-700/80 border border-charcoal-700 hover:border-gray-500 text-gray-300 px-2.5 py-1 rounded transition-all"
+                    className="text-[11px] bg-charcoal-900 hover:bg-purple-950/20 border border-charcoal-700 hover:border-purple-500 text-gray-300 px-2.5 py-1 rounded transition-all cursor-pointer"
                   >
                     💼 Tight Budget ($18)
                   </button>
@@ -285,19 +286,20 @@ export default function App() {
             </div>
 
             <div>
-              <label htmlFor="max-budget" className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">
-                Max Daily Budget ($)
+              {/* Visible Semantic Label */}
+              <label htmlFor="max-budget" className="block text-xs font-bold text-purple-400 uppercase tracking-wider mb-2">
+                Max Budget ($)
               </label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <DollarSign className="h-4.5 w-4.5 text-gray-500" />
+                  <DollarSign className="h-4.5 w-4.5 text-purple-400" />
                 </div>
                 <input
                   id="max-budget"
                   type="number"
                   step="0.01"
                   min="1"
-                  className="w-full bg-charcoal-900 border border-charcoal-700 hover:border-gray-500 focus:focus-ring rounded-lg py-2.5 pl-9 pr-3 text-sm text-gray-100 placeholder-gray-500 font-medium transition-colors"
+                  className="w-full bg-charcoal-900 border border-charcoal-700 hover:border-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-purple-500 rounded-lg py-2.5 pl-9 pr-3 text-sm text-gray-100 placeholder-gray-500 font-medium transition-colors"
                   placeholder="e.g. 30.00"
                   value={maxBudget}
                   onChange={(e) => setMaxBudget(e.target.value)}
@@ -306,13 +308,14 @@ export default function App() {
               </div>
             </div>
 
+            {/* Crisp Purple Action Button */}
             <button
               type="submit"
               disabled={loading}
-              className={`w-full py-3 px-4 rounded-lg font-semibold tracking-wide text-sm flex items-center justify-center gap-2 border transition-all ${
+              className={`w-full py-3 px-4 rounded-lg font-semibold tracking-wide text-sm flex items-center justify-center gap-2 border transition-all cursor-pointer ${
                 loading
                   ? 'bg-charcoal-900 border-charcoal-700 text-gray-500 cursor-not-allowed'
-                  : 'bg-emerald-500 hover:bg-emerald-600 border-emerald-600 hover:border-emerald-700 text-[#121212] font-extrabold hover:shadow-[0_0_15px_rgba(16,185,129,0.3)]'
+                  : 'bg-purple-600 hover:bg-purple-700 border-purple-500 hover:border-purple-600 text-white font-extrabold hover:shadow-[0_0_15px_rgba(168,85,247,0.3)]'
               }`}
             >
               {loading ? (
@@ -332,9 +335,9 @@ export default function App() {
           {/* Guidelines info card */}
           <div className="mt-6 border-t border-charcoal-700/80 pt-5 text-[11px] text-gray-400 leading-relaxed space-y-2.5">
             <div className="flex items-start gap-2 bg-charcoal-900/40 p-3 rounded-lg border border-charcoal-700/40">
-              <Info className="w-4 h-4 text-emerald-500 shrink-0 mt-0.5" />
+              <Info className="w-4 h-4 text-purple-400 shrink-0 mt-0.5" />
               <span>
-                <strong>MacroByte Engine:</strong> Dynamically optimizes ingredient portions and checks real-time feasibility. Toggle preset templates to sample diverse dietary strategies.
+                <strong>VeloCook Optimisation Model:</strong> Automatically coordinates caloric yields and raw cost thresholds. Pre-fill schedules on the left to analyze budget feasibility metrics.
               </span>
             </div>
           </div>
@@ -352,12 +355,12 @@ export default function App() {
             /* Sleek spinner placeholder */
             <div className="min-h-[400px] flex flex-col items-center justify-center bg-charcoal-800/20 border border-charcoal-800/40 rounded-xl p-8 shadow-inner">
               <div className="relative mb-4 flex items-center justify-center">
-                <div className="w-16 h-16 rounded-full border-4 border-charcoal-700/60 border-t-emerald-500 animate-spin"></div>
-                <Sparkles className="w-6 h-6 text-emerald-500 absolute animate-pulse" />
+                <div className="w-16 h-16 rounded-full border-4 border-charcoal-700/60 border-t-purple-500 animate-spin"></div>
+                <Sparkles className="w-6 h-6 text-purple-500 absolute animate-pulse" />
               </div>
-              <h3 className="text-white font-semibold text-base mb-1">Evaluating Dietary Constraints</h3>
+              <h3 className="text-white font-semibold text-base mb-1">Evaluating Daily Feasibility</h3>
               <p className="text-xs text-gray-400 text-center max-w-xs leading-relaxed">
-                Querying database models and calculating financial margins for selected meals...
+                Querying optimization formulas and verifying supply cost structures...
               </p>
             </div>
           ) : result ? (
@@ -371,7 +374,7 @@ export default function App() {
                 </div>
               )}
 
-              {/* Feasibility Badge */}
+              {/* Feasibility Badge (Accents Emerald for Feasible, Amber/Red for Deficit) */}
               <div className={`p-5 rounded-xl border flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 shadow-xl ${
                 result.is_feasible 
                   ? 'bg-emerald-950/20 border-emerald-500/30' 
@@ -410,6 +413,7 @@ export default function App() {
                     <div className="text-[10px] text-gray-400 font-bold uppercase tracking-wider mb-0.5">
                       {result.remaining_balance >= 0 ? "Remaining" : "Deficit"}
                     </div>
+                    {/* Emerald for positive balance, Red for deficit */}
                     <div className={`text-xl font-bold ${
                       result.remaining_balance >= 0 ? 'text-emerald-400' : 'text-red-400'
                     }`}>
@@ -421,7 +425,7 @@ export default function App() {
 
               {/* Meal Plan Grid */}
               <div className="space-y-3">
-                <h4 className="text-xs font-bold text-gray-400 uppercase tracking-widest">
+                <h4 className="text-xs font-bold text-purple-400 uppercase tracking-widest">
                   Daily Plan Architecture
                 </h4>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -435,7 +439,7 @@ export default function App() {
                           <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">
                             {time}
                           </span>
-                          <span className="text-xs font-bold text-white bg-charcoal-900 px-2 py-0.5 rounded border border-charcoal-700">
+                          <span className="text-xs font-bold text-purple-300 bg-charcoal-900 px-2 py-0.5 rounded border border-charcoal-700">
                             ${meal.cost.toFixed(2)}
                           </span>
                         </div>
@@ -455,14 +459,14 @@ export default function App() {
               <div className="bg-charcoal-800/40 border border-charcoal-700/80 rounded-xl p-5 md:p-6 space-y-4">
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 border-b border-charcoal-700/60 pb-3">
                   <div>
-                    <h4 className="text-sm font-semibold text-white tracking-tight">
+                    <h4 className="text-sm font-semibold text-purple-400 tracking-tight">
                       Sourcing Procurement Checklist
                     </h4>
                     <p className="text-[11px] text-gray-400 mt-0.5">
                       Mark off items as purchased during grocery trip.
                     </p>
                   </div>
-                  {/* Progress Indicator */}
+                  {/* Progress Indicator (Emerald Green status metric) */}
                   <div className="flex items-center gap-3 shrink-0">
                     <span className="text-xs font-bold text-gray-300">
                       {progressPercent}% Complete
@@ -484,21 +488,22 @@ export default function App() {
                         <button
                           type="button"
                           onClick={() => handleCheckboxToggle(item.id)}
-                          className="w-full flex items-center justify-between p-3 rounded-lg border border-charcoal-700/40 bg-charcoal-900/20 hover:bg-charcoal-900/40 hover:border-charcoal-600 transition-all text-left text-xs cursor-pointer group"
+                          className="w-full flex items-center justify-between p-3 rounded-lg border border-charcoal-700/40 bg-charcoal-900/20 hover:bg-charcoal-900/40 hover:border-purple-500/50 focus:outline-none focus:ring-1 focus:ring-purple-500/50 transition-all text-left text-xs cursor-pointer group"
                         >
                           <div className="flex items-center gap-3 pr-2 min-w-0">
-                            <span className="text-gray-400 shrink-0 group-hover:text-emerald-400">
+                            {/* Checkbox border highlights purple on hover, checks green */}
+                            <span className="text-gray-400 shrink-0 group-hover:text-purple-400">
                               {isChecked ? (
                                 <CheckSquare className="w-4.5 h-4.5 text-emerald-500 fill-emerald-500/10" />
                               ) : (
-                                <Square className="w-4.5 h-4.5 text-gray-500" />
+                                <Square className="w-4.5 h-4.5 text-gray-500 group-hover:border-purple-400" />
                               )}
                             </span>
                             <span className={`font-medium truncate ${isChecked ? 'line-through text-gray-500' : 'text-gray-200'}`}>
                               {item.item}
                             </span>
                           </div>
-                          <span className={`font-bold shrink-0 ${isChecked ? 'text-gray-600' : 'text-gray-400'}`}>
+                          <span className={`font-bold shrink-0 ${isChecked ? 'text-gray-600' : 'text-purple-300'}`}>
                             ${item.cost.toFixed(2)}
                           </span>
                         </button>
@@ -509,18 +514,18 @@ export default function App() {
               </div>
 
               {/* Substitutions Pro-Tip Section */}
-              <div className="bg-[#0f2d1e]/20 border border-emerald-900/30 rounded-xl p-5">
+              <div className="bg-[#1e142e]/20 border border-purple-900/20 rounded-xl p-5">
                 <div className="flex items-start gap-3">
-                  <div className="p-1 bg-emerald-500/10 border border-emerald-500/20 rounded">
-                    <TrendingDown className="w-4.5 h-4.5 text-emerald-400" />
+                  <div className="p-1 bg-purple-500/10 border border-purple-500/20 rounded">
+                    <TrendingDown className="w-4.5 h-4.5 text-purple-400" />
                   </div>
                   <div className="space-y-3 w-full">
                     <div>
-                      <h4 className="text-xs font-bold text-emerald-400 uppercase tracking-wider">
-                        Consulting Insight: Strategic Cost Substitution
+                      <h4 className="text-xs font-bold text-purple-400 uppercase tracking-wider">
+                        Strategic Ingredient Substitutions
                       </h4>
                       <p className="text-[11px] text-gray-300 mt-0.5 leading-relaxed">
-                        To improve ROI and budget margin, consider switching ingredients for equivalent nutritional yields.
+                        Lower your sourcing costs by replacing high-premium elements with budget alternatives of equivalent value.
                       </p>
                     </div>
                     
@@ -552,30 +557,30 @@ export default function App() {
             /* Welcome / Empty State Presenter */
             <div className="min-h-[480px] flex flex-col items-center justify-center bg-charcoal-800/10 border border-dashed border-charcoal-700 rounded-xl p-8 text-center shadow-inner">
               <div className="w-12 h-12 bg-charcoal-800/80 border border-charcoal-700 rounded-lg flex items-center justify-center text-gray-500 mb-4 shadow-sm">
-                <HelpCircle className="w-6 h-6 text-gray-400" />
+                <HelpCircle className="w-6 h-6 text-purple-400" />
               </div>
-              <h3 className="text-white font-semibold text-base mb-1.5">No Analysis Generated Yet</h3>
+              <h3 className="text-purple-400 font-semibold text-base mb-1.5">No Analysis Generated Yet</h3>
               <p className="text-xs text-gray-400 max-w-sm leading-relaxed mb-6">
-                Fill in your day's schedule constraints and budget limits in the panel on the left, then click <strong>"Generate Report"</strong> to calculate dynamic cost metrics.
+                Fill in your schedule parameters and daily budget limits on the left inputs panel, then click <strong>"Generate Report"</strong> to calculate financial margins.
               </p>
               
               {/* Feature grid tags */}
               <div className="grid grid-cols-2 gap-3 max-w-sm text-left border-t border-charcoal-800/80 pt-6 w-full">
                 <div className="text-[11px] text-gray-400 flex items-start gap-2">
-                  <span className="text-emerald-500 font-bold shrink-0">✔</span>
-                  <span><strong>Dynamic Checklists:</strong> Live tracking on purchases.</span>
+                  <span className="text-purple-400 font-bold shrink-0">★</span>
+                  <span><strong>Dynamic Checklists:</strong> Interactive sourcing tasks.</span>
                 </div>
                 <div className="text-[11px] text-gray-400 flex items-start gap-2">
-                  <span className="text-emerald-500 font-bold shrink-0">✔</span>
-                  <span><strong>Feasibility Check:</strong> Instant indicators & balance calculations.</span>
+                  <span className="text-purple-400 font-bold shrink-0">★</span>
+                  <span><strong>Feasibility Badging:</strong> Visual status and balance tracking.</span>
                 </div>
                 <div className="text-[11px] text-gray-400 flex items-start gap-2">
-                  <span className="text-emerald-500 font-bold shrink-0">✔</span>
-                  <span><strong>AI Substitutions:</strong> Smarter alternatives to optimize budget.</span>
+                  <span className="text-purple-400 font-bold shrink-0">★</span>
+                  <span><strong>Smart Substitutes:</strong> Strategic advice on swaps.</span>
                 </div>
                 <div className="text-[11px] text-gray-400 flex items-start gap-2">
-                  <span className="text-emerald-500 font-bold shrink-0">✔</span>
-                  <span><strong>Aesthetic UI:</strong> Premium dark mode high-contrast dashboard.</span>
+                  <span className="text-purple-400 font-bold shrink-0">★</span>
+                  <span><strong>Premium Dark Mode:</strong> Clean high-contrast purple dashboard.</span>
                 </div>
               </div>
             </div>
@@ -586,11 +591,11 @@ export default function App() {
       {/* Footer */}
       <footer className="border-t border-charcoal-700 bg-charcoal-950/40 text-[10px] text-gray-500 py-6 px-6">
         <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3">
-          <span>&copy; 2026 MacroByte Management Consulting Inc. All rights reserved.</span>
+          <span>&copy; 2026 VeloCook Analytics Consulting Group. All rights reserved.</span>
           <div className="flex gap-4">
-            <a href="#" className="hover:text-gray-300 transition-colors">Privacy Charter</a>
-            <a href="#" className="hover:text-gray-300 transition-colors">Methodology</a>
-            <a href="#" className="hover:text-gray-300 transition-colors">Client Portal</a>
+            <a href="#" className="hover:text-gray-300 transition-colors">Privacy Policy</a>
+            <a href="#" className="hover:text-gray-300 transition-colors">Calculations Model</a>
+            <a href="#" className="hover:text-gray-300 transition-colors">Client Services</a>
           </div>
         </div>
       </footer>
