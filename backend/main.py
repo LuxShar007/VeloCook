@@ -5,10 +5,17 @@ from typing import List, Dict, Optional
 import os
 import json
 import requests
-from dotenv import load_dotenv
+# Load local environment variables from .env manually to avoid library dependencies
+env_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), ".env")
+if os.path.exists(env_path):
+    with open(env_path, "r") as f:
+        for line in f:
+            line = line.strip()
+            if line and not line.startswith("#"):
+                parts = line.split("=", 1)
+                if len(parts) == 2:
+                    os.environ[parts[0].strip()] = parts[1].strip()
 
-# Load local environment variables from .env
-load_dotenv()
 
 app = FastAPI(title="VeloCook API", description="AI Cooking To-Do List & Budget Feasibility Generator via Gemini")
 
