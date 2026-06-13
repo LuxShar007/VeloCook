@@ -31,6 +31,7 @@ app.add_middleware(
 class PlanRequest(BaseModel):
     day_description: str = Field(..., example="A busy day with high intensity workouts")
     max_budget: float = Field(..., example=30.0)
+    cuisine_preference: Optional[str] = Field("standard", example="maharashtrian")
 
 class MealDetail(BaseModel):
     name: str
@@ -100,9 +101,9 @@ MEAL_TEMPLATES = {
     },
     "default": {
         "meals": {
-            "breakfast": {"name": "Sourdough Toast & Poached Eggs", "cost": 5.00, "description": "Two organic poached eggs served on toasted artisanal sourdough bread with a drizzle of olive oil."},
-            "lunch": {"name": "Quinoa Salad with Grilled Chicken", "cost": 9.00, "description": "Fluffy quinoa mixed with diced cucumber, cherry tomatoes, and sliced grilled chicken breast."},
-            "dinner": {"name": "Pan-Seared Salmon with Asparagus", "cost": 13.00, "description": "Crispy skin-on salmon fillet basted with lemon butter, served alongside roasted asparagus."}
+            "breakfast": {"name": "Sourdough Toast & Poached Eggs", "cost": 5.0, "description": "Two organic poached eggs served on toasted artisanal sourdough bread with a drizzle of olive oil."},
+            "lunch": {"name": "Quinoa Salad with Grilled Chicken", "cost": 9.0, "description": "Fluffy quinoa mixed with diced cucumber, cherry tomatoes, and sliced grilled chicken breast."},
+            "dinner": {"name": "Pan-Seared Salmon with Asparagus", "cost": 13.0, "description": "Crispy skin-on salmon fillet basted with lemon butter, served alongside roasted asparagus."}
         },
         "grocery_list": [
             {"id": "d1", "item": "Sourdough bread", "cost": 2.00},
@@ -116,17 +117,62 @@ MEAL_TEMPLATES = {
             {"original": "Salmon fillet", "substitute": "Rainbow Trout", "reason": "Trout is often fresher locally and generally costs 20-30% less than salmon."},
             {"original": "Sourdough bread", "substitute": "Whole wheat bread", "reason": "Budget option that provides similar complex carbohydrates."}
         ]
+    },
+    "indian": {
+        "meals": {
+            "breakfast": {"name": "Masala Chai & Aloo Paratha", "cost": 3.50, "description": "Whole wheat flatbread stuffed with spiced mashed potatoes, served with plain curd and a cup of aromatic Masala Chai."},
+            "lunch": {"name": "Dal Tadka, Jeera Rice & Mixed Veg Sabzi", "cost": 6.50, "description": "Yellow lentil dal tempered with cumin, garlic, and ghee, served with cumin rice and a seasonal vegetable stir-fry."},
+            "dinner": {"name": "Paneer Bhurji & Whole Wheat Roti", "cost": 8.00, "description": "Scrambled cottage cheese cooked with onions, tomatoes, and spices, served with fresh handmade rotis."}
+        },
+        "grocery_list": [
+            {"id": "in1", "item": "Potatoes & Whole wheat flour", "cost": 2.00},
+            {"id": "in2", "item": "Masala tea leaves & Milk", "cost": 1.50},
+            {"id": "in3", "item": "Yellow lentils (Toor Dal)", "cost": 2.00},
+            {"id": "in4", "item": "Basmati rice & Cumin seeds", "cost": 2.00},
+            {"id": "in5", "item": "Mixed seasonal vegetables", "cost": 2.50},
+            {"id": "in6", "item": "Paneer (Cottage cheese)", "cost": 4.50},
+            {"id": "in7", "item": "Ghee & Spices", "cost": 3.50}
+        ],
+        "substitutions": [
+            {"original": "Paneer", "substitute": "Tofu", "reason": "Saves up to 30% on cost while maintaining low-carb protein values."},
+            {"original": "Basmati rice", "substitute": "Sona Masoori rice", "reason": "A budget grain substitute that lowers the total expense of your pantry staples."}
+        ]
+    },
+    "maharashtrian": {
+        "meals": {
+            "breakfast": {"name": "Kanda Poha & Solkadhi", "cost": 3.00, "description": "Flattened rice cooked with onions, peanuts, curry leaves, and mustard seeds, paired with a refreshing Solkadhi (kokum and coconut milk drink)."},
+            "lunch": {"name": "Pithla Bhakri with Hirvi Mirchi Thecha", "cost": 5.00, "description": "Thick chickpea flour curry (Pithla) served with traditional flatbread made of sorghum (Jowar Bhakri) and spicy crushed green chili condiment (Thecha)."},
+            "dinner": {"name": "Varan Bhaat, Batata Bhaji & Sajuk Tup", "cost": 6.50, "description": "Steamed rice topped with yellow split-pigeon-pea dal (Varan) and pure ghee (Sajuk Tup), served alongside tempered dry potato bhaji."}
+        },
+        "grocery_list": [
+            {"id": "mh1", "item": "Poha (Flattened rice) & Peanuts", "cost": 1.50},
+            {"id": "mh2", "item": "Kokum & Coconut milk (Solkadhi)", "cost": 1.50},
+            {"id": "mh3", "item": "Besan (Gram flour) & Jowar flour", "cost": 2.00},
+            {"id": "mh4", "item": "Green chilies & Garlic", "cost": 1.00},
+            {"id": "mh5", "item": "Rice & Toor dal", "cost": 2.00},
+            {"id": "mh6", "item": "Potatoes & Onions", "cost": 2.00},
+            {"id": "mh7", "item": "Pure Ghee (Sajuk Tup)", "cost": 4.50}
+        ],
+        "substitutions": [
+            {"original": "Kokum fruit extract", "substitute": "Tamarind paste", "reason": "If kokum is hard to find or premium, tamarind provides the necessary sour tang for Solkadhi at a lower cost."},
+            {"original": "Jowar Bhakri", "substitute": "Wheat Chapati", "reason": "Chapati flour is cheaper and easier to prepare for quick meal prep sessions."}
+        ]
     }
 }
 
-def get_fallback_plan(day_description: str, max_budget: float) -> PlanResponse:
-    desc_lower = day_description.lower()
-    if "vegan" in desc_lower or "plant" in desc_lower or "vegetarian" in desc_lower:
-        plan_type = "vegan"
-    elif "keto" in desc_lower or "low carb" in desc_lower or "high fat" in desc_lower:
-        plan_type = "keto"
+def get_fallback_plan(day_description: str, max_budget: float, cuisine_preference: str = "standard") -> PlanResponse:
+    if cuisine_preference == "indian":
+        plan_type = "indian"
+    elif cuisine_preference == "maharashtrian":
+        plan_type = "maharashtrian"
     else:
-        plan_type = "default"
+        desc_lower = day_description.lower()
+        if "vegan" in desc_lower or "plant" in desc_lower or "vegetarian" in desc_lower:
+            plan_type = "vegan"
+        elif "keto" in desc_lower or "low carb" in desc_lower or "high fat" in desc_lower:
+            plan_type = "keto"
+        else:
+            plan_type = "default"
         
     template = MEAL_TEMPLATES[plan_type]
     meals = template["meals"]
@@ -162,11 +208,19 @@ async def generate_plan(request: PlanRequest):
     
     # Just a ping to verify connection
     if request.day_description == "ping":
-        return get_fallback_plan(request.day_description, request.max_budget)
+        return get_fallback_plan(request.day_description, request.max_budget, request.cuisine_preference)
         
     if not api_key:
         print("GEMINI_API_KEY not set. Falling back to local plan generation.")
-        return get_fallback_plan(request.day_description, request.max_budget)
+        return get_fallback_plan(request.day_description, request.max_budget, request.cuisine_preference)
+
+    cuisine_context = ""
+    if request.cuisine_preference == "indian":
+        cuisine_context = "Cuisine Preference: General Indian Cuisines (incorporate traditional dishes like Poha, Masala Chai, Dal Tadka, Sabzi, Roti, Paneer, Khichdi, etc.)."
+    elif request.cuisine_preference == "maharashtrian":
+        cuisine_context = "Cuisine Preference: Traditional Maharashtrian Cuisine (incorporate local favorites like Kanda Poha, Misal Pav, Pithla Bhakri with Thecha, Varan Bhaat, Batata Bhaji, Solkadhi, Upma, Sabudana Khichdi, etc.)."
+    else:
+        cuisine_context = "Cuisine Preference: Standard/International nutritious meals."
 
     # Build detailed prompt enforcing JSON output
     prompt = f"""
@@ -175,6 +229,7 @@ async def generate_plan(request: PlanRequest):
     
     User's Day Description: "{request.day_description}"
     User's Max Budget: ${request.max_budget:.2f}
+    {cuisine_context}
     
     Provide a realistic menu with:
     1. Breakfast, Lunch, and Dinner. Calculate individual estimated costs for each.

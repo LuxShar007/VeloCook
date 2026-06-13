@@ -84,6 +84,52 @@ const MOCK_PLANS = {
       { original: "Salmon fillet", substitute: "Rainbow Trout", reason: "Trout is often fresher locally and generally costs 25% less than salmon." },
       { original: "Sourdough bread", substitute: "Whole wheat bread", reason: "Budget option that provides similar complex carbohydrates." }
     ]
+  },
+  indian: {
+    is_feasible: true,
+    total_cost: 18.00,
+    remaining_balance: 17.00,
+    meals: {
+      breakfast: { name: "Masala Chai & Aloo Paratha", cost: 3.50, description: "Whole wheat flatbread stuffed with spiced mashed potatoes, served with plain curd and a cup of aromatic Masala Chai." },
+      lunch: { name: "Dal Tadka, Jeera Rice & Mixed Veg Sabzi", cost: 6.50, description: "Yellow lentil dal tempered with cumin, garlic, and ghee, served with cumin rice and a seasonal vegetable stir-fry." },
+      dinner: { name: "Paneer Bhurji & Whole Wheat Roti", cost: 8.00, description: "Scrambled cottage cheese cooked with onions, tomatoes, and spices, served with fresh handmade rotis." }
+    },
+    grocery_list: [
+      { id: "in1", item: "Potatoes & Whole wheat flour", cost: 2.00 },
+      { id: "in2", item: "Masala tea leaves & Milk", cost: 1.50 },
+      { id: "in3", item: "Yellow lentils (Toor Dal)", cost: 2.00 },
+      { id: "in4", item: "Basmati rice & Cumin seeds", cost: 2.00 },
+      { id: "in5", item: "Mixed seasonal vegetables", cost: 2.50 },
+      { id: "in6", item: "Paneer (Cottage cheese)", cost: 4.50 },
+      { id: "in7", item: "Ghee & Spices", cost: 3.50 }
+    ],
+    substitutions: [
+      { original: "Paneer", substitute: "Tofu", reason: "Saves up to 30% on cost while maintaining low-carb protein values." },
+      { original: "Basmati rice", substitute: "Sona Masoori rice", reason: "A budget grain substitute that lowers the total expense of your pantry staples." }
+    ]
+  },
+  maharashtrian: {
+    is_feasible: true,
+    total_cost: 14.50,
+    remaining_balance: 20.50,
+    meals: {
+      breakfast: { name: "Kanda Poha & Solkadhi", cost: 3.00, description: "Flattened rice cooked with onions, peanuts, curry leaves, and mustard seeds, paired with a refreshing Solkadhi (kokum and coconut milk drink)." },
+      lunch: { name: "Pithla Bhakri with Hirvi Mirchi Thecha", cost: 5.00, description: "Thick chickpea flour curry (Pithla) served with traditional flatbread made of sorghum (Jowar Bhakri) and spicy crushed green chili condiment (Thecha)." },
+      dinner: { name: "Varan Bhaat, Batata Bhaji & Sajuk Tup", cost: 6.50, description: "Steamed rice topped with yellow split-pigeon-pea dal (Varan) and pure ghee (Sajuk Tup), served alongside tempered dry potato bhaji." }
+    },
+    grocery_list: [
+      { id: "mh1", item: "Poha (Flattened rice) & Peanuts", cost: 1.50 },
+      { id: "mh2", item: "Kokum & Coconut milk (Solkadhi)", cost: 1.50 },
+      { id: "mh3", item: "Besan (Gram flour) & Jowar flour", cost: 2.00 },
+      { id: "mh4", item: "Green chilies & Garlic", cost: 1.00 },
+      { id: "mh5", item: "Rice & Toor dal", cost: 2.00 },
+      { id: "mh6", item: "Potatoes & Onions", cost: 2.00 },
+      { id: "mh7", item: "Pure Ghee (Sajuk Tup)", cost: 4.50 }
+    ],
+    substitutions: [
+      { original: "Kokum fruit extract", substitute: "Tamarind paste", reason: "If kokum is hard to find or premium, tamarind provides the necessary sour tang for Solkadhi at a lower cost." },
+      { original: "Jowar Bhakri", substitute: "Wheat Chapati", reason: "Chapati flour is cheaper and easier to prepare for quick meal prep sessions." }
+    ]
   }
 };
 
@@ -96,6 +142,7 @@ export default function App() {
   const [groceryChecked, setGroceryChecked] = useState({});
   const [apiOnline, setApiOnline] = useState(null);
   const [generationCount, setGenerationCount] = useState(0);
+  const [cuisinePreference, setCuisinePreference] = useState('standard'); // 'standard', 'indian', 'maharashtrian'
 
   const [animationState, setAnimationState] = useState('active'); // 'active', 'glow', 'zooming', 'completed'
   const [zoomOrigin, setZoomOrigin] = useState({ x: '50%', y: '50%' });
@@ -140,7 +187,7 @@ export default function App() {
         const res = await fetch(url, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ day_description: "ping", max_budget: 10 })
+          body: JSON.stringify({ day_description: "ping", max_budget: 10, cuisine_preference: "standard" })
         });
         if (res.ok) {
           setApiOnline(true);
@@ -175,7 +222,8 @@ export default function App() {
 
     const payload = {
       day_description: dayDescription,
-      max_budget: parseFloat(maxBudget) || 0
+      max_budget: parseFloat(maxBudget) || 0,
+      cuisine_preference: cuisinePreference
     };
 
     try {
@@ -205,7 +253,11 @@ export default function App() {
         const descLower = dayDescription.toLowerCase();
         let simulatedPlan;
 
-        if (descLower.includes("vegan") || descLower.includes("plant") || descLower.includes("vegetarian")) {
+        if (cuisinePreference === "indian") {
+          simulatedPlan = JSON.parse(JSON.stringify(MOCK_PLANS.indian));
+        } else if (cuisinePreference === "maharashtrian") {
+          simulatedPlan = JSON.parse(JSON.stringify(MOCK_PLANS.maharashtrian));
+        } else if (descLower.includes("vegan") || descLower.includes("plant") || descLower.includes("vegetarian")) {
           simulatedPlan = JSON.parse(JSON.stringify(MOCK_PLANS.vegan));
         } else if (descLower.includes("keto") || descLower.includes("low carb") || descLower.includes("high fat")) {
           simulatedPlan = JSON.parse(JSON.stringify(MOCK_PLANS.keto));
@@ -346,6 +398,22 @@ export default function App() {
                     </button>
                   </div>
                 </div>
+              </div>
+
+              <div>
+                <label htmlFor="cuisine-pref" className="block text-xs font-bold text-emerald-700 uppercase tracking-wider mb-2">
+                  Cuisine / Culture Preference
+                </label>
+                <select
+                  id="cuisine-pref"
+                  value={cuisinePreference}
+                  onChange={(e) => setCuisinePreference(e.target.value)}
+                  className="w-full bg-slate-50 border border-slate-200 hover:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 rounded-lg p-2.5 text-sm text-slate-800 transition-colors cursor-pointer"
+                >
+                  <option value="standard">Standard / International</option>
+                  <option value="indian">🇮🇳 Indian Cuisines (General)</option>
+                  <option value="maharashtrian">🚩 Maharashtrian Cuisine (Cultural)</option>
+                </select>
               </div>
 
               <div>
