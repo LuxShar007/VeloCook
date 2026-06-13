@@ -201,9 +201,10 @@ export default function App() {
     checkApi();
   }, []);
 
-  const fillPreset = (desc, budget) => {
+  const fillPreset = (desc, budget, cuisine = 'standard') => {
     setDayDescription(desc);
     setMaxBudget(budget);
+    setCuisinePreference(cuisine);
   };
 
   const handleCheckboxToggle = (itemId) => {
@@ -456,31 +457,38 @@ export default function App() {
                   <div className="flex flex-wrap gap-1.5">
                     <button
                       type="button"
-                      onClick={() => fillPreset("Keto day with high-protein lunch and easy dinner", 350.00)}
+                      onClick={() => fillPreset("Keto day with high-protein lunch and easy dinner", 350.00, "standard")}
                       className="text-[11px] bg-slate-100/80 hover:bg-slate-200/50 border border-slate-200 text-slate-600 hover:text-slate-800 px-2.5 py-1 rounded transition-all cursor-pointer"
                     >
                       ⚡ Keto (₹350)
                     </button>
                     <button
                       type="button"
-                      onClick={() => fillPreset("Vegan cleansing day with fresh vegetable focus", 250.00)}
+                      onClick={() => fillPreset("Vegan cleansing day with fresh vegetable focus", 250.00, "standard")}
                       className="text-[11px] bg-slate-100/80 hover:bg-slate-200/50 border border-slate-200 text-slate-600 hover:text-slate-800 px-2.5 py-1 rounded transition-all cursor-pointer"
                     >
                       🌱 Vegan (₹250)
                     </button>
                     <button
                       type="button"
-                      onClick={() => fillPreset("Busy corporate meeting day with easy prep comfort food", 180.00)}
+                      onClick={() => fillPreset("High-protein vegetarian day with standard Indian meals", 180.00, "indian")}
                       className="text-[11px] bg-slate-100/80 hover:bg-slate-200/50 border border-slate-200 text-slate-600 hover:text-slate-800 px-2.5 py-1 rounded transition-all cursor-pointer"
                     >
-                      💼 Tight Budget (₹180)
+                      🇮🇳 Indian (₹180)
                     </button>
                     <button
                       type="button"
-                      onClick={() => fillPreset("Simple traditional Indian local diet day", 20.00)}
+                      onClick={() => fillPreset("Traditional home-style Maharashtrian meal plan", 145.00, "maharashtrian")}
                       className="text-[11px] bg-slate-100/80 hover:bg-slate-200/50 border border-slate-200 text-slate-600 hover:text-slate-800 px-2.5 py-1 rounded transition-all cursor-pointer"
                     >
-                      🚩 Cheap/Local (₹20)
+                      🚩 Maharashtrian (₹145)
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => fillPreset("Simple traditional Indian local diet day", 20.00, "maharashtrian")}
+                      className="text-[11px] bg-slate-100/80 hover:bg-slate-200/50 border border-slate-200 text-slate-600 hover:text-slate-800 px-2.5 py-1 rounded transition-all cursor-pointer"
+                    >
+                      🪙 Cheap/Local (₹20)
                     </button>
                   </div>
                 </div>
