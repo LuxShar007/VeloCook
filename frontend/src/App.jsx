@@ -11,7 +11,8 @@ import {
   BookOpen, 
   HelpCircle,
   TrendingDown,
-  Info
+  Info,
+  Download
 } from 'lucide-react';
 
 // Default static templates for our local simulator fallback
@@ -426,6 +427,26 @@ export default function App() {
             ) : result ? (
               /* Analysis Presenter */
               <div className="space-y-6">
+                {/* PDF Print Header (Hidden on Screen, Shown on Print) */}
+                <div className="hidden print-report-header">
+                  <h2>VeloCook Analysis & Sourcing Report</h2>
+                  <p>Generated on {new Date().toLocaleDateString()} | Budget Limit: ${parseFloat(maxBudget).toFixed(2)}</p>
+                </div>
+
+                {/* Dashboard Header with PDF Export Button */}
+                <div className="flex items-center justify-between border-b border-slate-200 pb-3 mb-2 print:hidden">
+                  <h3 className="text-xs font-bold text-slate-400 uppercase tracking-widest">
+                    Generated Analysis Dashboard
+                  </h3>
+                  <button
+                    type="button"
+                    onClick={() => window.print()}
+                    className="flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white border border-emerald-500 hover:border-emerald-600 text-xs font-bold px-3 py-1.5 rounded-lg shadow-sm hover:shadow-emerald-500/15 transition-all cursor-pointer"
+                  >
+                    <Download className="w-3.5 h-3.5" /> Export PDF Report
+                  </button>
+                </div>
+
                 {/* Warnings / Offline Alert Banner */}
                 {error && (
                   <div className="flex items-center gap-2.5 bg-amber-50 border border-amber-200 text-amber-800 text-xs px-4 py-3 rounded-lg">
@@ -610,6 +631,37 @@ export default function App() {
                     </div>
                   </div>
                 </div>
+
+                {/* Accessibility & Cooking Optimization Guide */}
+                <div className="bg-white border border-slate-200/80 rounded-xl p-5 md:p-6 space-y-4 light-shadow-sm">
+                  <div className="flex items-center gap-2 border-b border-slate-100 pb-3">
+                    <Info className="w-5 h-5 text-emerald-600 animate-pulse" />
+                    <h4 className="text-sm font-semibold text-slate-800 tracking-tight">
+                      Accessibility & Cooking Optimization Guide
+                    </h4>
+                  </div>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-5 text-xs">
+                    <div className="space-y-2.5">
+                      <h5 className="font-bold text-emerald-700 uppercase tracking-wider text-[10px]">Sourcing & Cost Elasticity</h5>
+                      <ul className="space-y-2 text-slate-600 list-disc list-inside leading-relaxed">
+                        <li><strong>Bulk Staples:</strong> Grains like quinoa and brown rice are 40-50% cheaper per ounce when bought from bulk bins.</li>
+                        <li><strong>Frozen vs. Fresh:</strong> Frozen ingredients preserve nutritional compounds while lowering grocery expenses.</li>
+                        <li><strong>Local Produce:</strong> Sourcing in-season vegetables helps bypass transport and shelf storage markups.</li>
+                      </ul>
+                    </div>
+                    
+                    <div className="space-y-2.5">
+                      <h5 className="font-bold text-emerald-700 uppercase tracking-wider text-[10px]">Kitchen Accessibility & Prep Tips</h5>
+                      <ul className="space-y-2 text-slate-600 list-disc list-inside leading-relaxed">
+                        <li><strong>Prep Assistance:</strong> Opt for pre-washed/chopped produce if manual knife prep presents mobility challenges.</li>
+                        <li><strong>Online Procurement:</strong> Utilize store pickup or delivery apps to easily cross-reference item costs before buying.</li>
+                        <li><strong>Portion Scaling:</strong> Adjust serving ratios dynamically to meet your unique active energy requirements.</li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+
               </div>
             ) : (
               /* Welcome / Empty State Presenter */

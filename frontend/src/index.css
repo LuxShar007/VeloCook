@@ -228,3 +228,97 @@
   border-color: #10b981;
   box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.2);
 }
+
+/* Print Stylesheet */
+@media print {
+  body {
+    background-color: #ffffff !important;
+    color: #000000 !important;
+    font-size: 11pt !important;
+  }
+
+  /* Hide UI elements that shouldn't be in the PDF */
+  header,
+  footer,
+  form,
+  .print\:hidden,
+  button,
+  .velocook-text {
+    display: none !important;
+  }
+
+  /* Reset layout structure for printing */
+  .min-h-screen,
+  div[class*="min-h-screen"] {
+    display: block !important;
+    min-height: auto !important;
+    background-color: #ffffff !important;
+  }
+
+  main,
+  main[class*="grid"] {
+    display: block !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  section,
+  section.lg\:col-span-7 {
+    display: block !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    margin-bottom: 2rem !important;
+  }
+
+  /* Hide the left-hand inputs panel entirely when printing */
+  section[aria-labelledby="inputs-heading"],
+  section.lg\:col-span-5 {
+    display: none !important;
+  }
+
+  /* Force background colors and borders to render in PDF exports */
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  /* Keep container boxes clean on paper without screen-optimized shadows */
+  .light-shadow-md,
+  .light-shadow-sm,
+  .bg-white,
+  .bg-emerald-50\/60,
+  .bg-rose-50\/60 {
+    box-shadow: none !important;
+    border: 1px solid #cbd5e1 !important;
+  }
+
+  /* Add report header styling */
+  .print-report-header {
+    display: block !important;
+    font-family: 'Outfit', 'Inter', sans-serif;
+    text-align: center;
+    border-bottom: 2px solid #e2e8f0;
+    padding-bottom: 1.5rem;
+    margin-bottom: 2rem;
+  }
+
+  .print-report-header h2 {
+    font-size: 20pt;
+    font-weight: 800;
+    color: #0f172a;
+    margin: 0;
+  }
+
+  .print-report-header p {
+    font-size: 10pt;
+    color: #475569;
+    margin-top: 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+}
