@@ -100,7 +100,10 @@ export default function App() {
   useEffect(() => {
     const checkApi = async () => {
       try {
-        const res = await fetch('http://localhost:8000/api/generate-plan', {
+        const url = window.location.hostname === 'localhost' 
+          ? 'http://localhost:8000/api/generate-plan' 
+          : '/_/backend/api/generate-plan';
+        const res = await fetch(url, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ day_description: "ping", max_budget: 10 })
@@ -142,7 +145,10 @@ export default function App() {
     };
 
     try {
-      const response = await fetch('http://localhost:8000/api/generate-plan', {
+      const url = window.location.hostname === 'localhost' 
+        ? 'http://localhost:8000/api/generate-plan' 
+        : '/_/backend/api/generate-plan';
+      const response = await fetch(url, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
