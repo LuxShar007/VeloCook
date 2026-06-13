@@ -196,6 +196,7 @@
 .velocook-text-inner {
   background: linear-gradient(135deg, #fbbf24 0%, #34d399 50%, #059669 100%);
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
   display: inline-block;
   filter: drop-shadow(0 0 25px rgba(251, 191, 36, 0.2));
