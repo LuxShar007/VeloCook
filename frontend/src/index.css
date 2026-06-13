@@ -1,41 +1,41 @@
 @import "tailwindcss";
 
 @theme {
-  --color-charcoal-50: #f6f6f6;
-  --color-charcoal-100: #e7e7e7;
-  --color-charcoal-200: #d1d1d1;
-  --color-charcoal-300: #b0b0b0;
-  --color-charcoal-400: #888888;
-  --color-charcoal-500: #6d6d6d;
-  --color-charcoal-600: #5d5d5d;
-  --color-charcoal-700: #4f4f4f;
-  --color-charcoal-800: #1c1c1e;
-  --color-charcoal-900: #121212;
-  --color-charcoal-950: #0a0a0a;
+  --color-charcoal-50: #f8fafc;
+  --color-charcoal-100: #f1f5f9;
+  --color-charcoal-200: #e2e8f0;
+  --color-charcoal-300: #cbd5e1;
+  --color-charcoal-400: #94a3b8;
+  --color-charcoal-500: #64748b;
+  --color-charcoal-600: #475569;
+  --color-charcoal-700: #334155;
+  --color-charcoal-800: #1e293b;
+  --color-charcoal-900: #0f172a;
+  --color-charcoal-950: #020617;
 
-  --color-emerald-50: #ecfdf5;
-  --color-emerald-100: #d1fae5;
-  --color-emerald-200: #a7f3d0;
-  --color-emerald-300: #6ee7b7;
-  --color-emerald-400: #34d399;
-  --color-emerald-500: #10b981;
-  --color-emerald-600: #059669;
-  --color-emerald-700: #047857;
-  --color-emerald-800: #065f46;
-  --color-emerald-900: #064e3b;
+  --color-emerald-50: #f0fdf4;
+  --color-emerald-100: #dcfce7;
+  --color-emerald-200: #bbf7d0;
+  --color-emerald-300: #86efac;
+  --color-emerald-400: #4ade80;
+  --color-emerald-500: #22c55e;
+  --color-emerald-600: #16a34a;
+  --color-emerald-700: #15803d;
+  --color-emerald-800: #166534;
+  --color-emerald-900: #14532d;
 
-  --font-sans: 'Inter', 'Roboto', 'system-ui', 'sans-serif';
+  --font-sans: 'Inter', 'Outfit', 'Roboto', 'system-ui', 'sans-serif';
 }
 
-/* Custom Consulting Theme Tweaks */
+/* Bright Mode Base Overrides */
 @layer base {
   :root {
-    color-scheme: dark;
+    color-scheme: light;
   }
 
   body {
-    background-color: #121212;
-    color: #f3f4f6;
+    background-color: #f8fafc;
+    color: #0f172a;
   }
 
   /* Custom high-fidelity scrollbar */
@@ -45,28 +45,181 @@
   }
 
   ::-webkit-scrollbar-track {
-    background: #121212;
+    background: #f8fafc;
   }
 
   ::-webkit-scrollbar-thumb {
-    background: #2c2c2e;
+    background: #cbd5e1;
     border-radius: 3px;
   }
 
   ::-webkit-scrollbar-thumb:hover {
-    background: #4f4f4f;
+    background: #94a3b8;
   }
 }
 
-/* Micro-animations */
+/* Startup Intro Animation Styles */
+.layer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 9999;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.6s ease, background-color 1s ease-in;
+  background-color: #070a13; /* Deep dark background for rich contrast initial state */
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.layer.active {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.layer.zoom-bg {
+  background-color: #f8fafc; /* Seamlessly transitions to bright-mode app bg */
+}
+
+/* Liquid Swirl Background */
+.liquid-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1;
+  background-color: #070a13;
+  opacity: 1;
+  transition: opacity 1s ease;
+}
+
+.liquid-bg.hide {
+  opacity: 0;
+}
+
+.blob {
+  position: absolute;
+  filter: blur(120px);
+  border-radius: 50%;
+  opacity: 0;
+  mix-blend-mode: screen;
+  will-change: transform, opacity;
+  transition: opacity 1.5s ease-in;
+}
+
+.liquid-bg.show .blob {
+  opacity: 0.85;
+}
+
+.blob-1 {
+  width: 60vw;
+  height: 60vw;
+  max-width: 700px;
+  max-height: 700px;
+  background: radial-gradient(circle, rgba(234, 179, 8, 0.8) 0%, rgba(234, 179, 8, 0) 70%); /* Yellow */
+  animation: swirl 10s infinite linear;
+}
+
+.blob-2 {
+  width: 70vw;
+  height: 70vw;
+  max-width: 800px;
+  max-height: 800px;
+  background: radial-gradient(circle, rgba(16, 185, 129, 0.8) 0%, rgba(16, 185, 129, 0) 70%); /* Emerald Green */
+  animation: swirl 14s infinite linear reverse;
+  transform-origin: 150px 150px;
+}
+
+.blob-3 {
+  width: 50vw;
+  height: 50vw;
+  max-width: 600px;
+  max-height: 600px;
+  background: radial-gradient(circle, rgba(163, 230, 53, 0.8) 0%, rgba(163, 230, 53, 0) 70%); /* Lime */
+  animation: swirl 12s infinite ease-in-out;
+  transform-origin: -100px -50px;
+}
+
+@keyframes swirl {
+  0% { transform: rotate(0deg) translate(60px) scale(1); }
+  50% { transform: rotate(180deg) translate(60px) scale(1.1); }
+  100% { transform: rotate(360deg) translate(60px) scale(1); }
+}
+
+.glass-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  backdrop-filter: blur(50px);
+  -webkit-backdrop-filter: blur(50px);
+  background: rgba(7, 10, 19, 0.65);
+  z-index: 2;
+  pointer-events: none;
+  transition: opacity 1.2s ease;
+}
+
+.glass-overlay.hide {
+  opacity: 0;
+}
+
+/* VeloCook Text Animation */
+.velocook-text {
+  position: relative;
+  z-index: 3;
+  font-family: 'Outfit', 'Inter', sans-serif;
+  font-size: 8vw;
+  font-weight: 800;
+  color: #ffffff;
+  letter-spacing: -0.04em;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  transform: translateZ(0);
+  will-change: transform, opacity;
+  transition: transform 1.2s cubic-bezier(0.8, 0, 0.2, 1), opacity 0.8s ease-in;
+  margin: 0;
+  text-align: center;
+}
+
+.velocook-text-inner {
+  background: linear-gradient(135deg, #fbbf24 0%, #34d399 50%, #059669 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  display: inline-block;
+  filter: drop-shadow(0 0 25px rgba(251, 191, 36, 0.2));
+  transition: filter 1s ease;
+}
+
+.velocook-text.glow .velocook-text-inner {
+  filter: drop-shadow(0 0 45px rgba(52, 211, 153, 0.5));
+}
+
+.velocook-text.zoom {
+  transform: scale(95) translateZ(0) !important;
+  opacity: 0;
+}
+
+/* UI Card Transitions & Accents */
 .transition-card {
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .transition-card:hover {
   transform: translateY(-2px);
-  border-color: rgba(16, 185, 129, 0.3); /* Subtle emerald hover border */
-  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.7);
+  border-color: rgba(16, 185, 129, 0.3);
+  box-shadow: 0 10px 20px -8px rgba(16, 185, 129, 0.12);
 }
 
 .focus-ring {
