@@ -71,8 +71,9 @@ VeloCook utilizes a premium bright-mode consulting report aesthetic:
 ## 🚀 Setup & Execution Guide
 
 ### 1. Backend Service Setup (FastAPI)
-Navigate to the `backend` folder, set up a Python virtual environment, install requirements, and boot up the server:
+Navigate to the `backend` folder, set up a Python virtual environment, install requirements, configure the Gemini API key, and boot up the server:
 
+1. **Setup Environment & Dependencies:**
 ```powershell
 # Navigate to backend directory
 cd backend
@@ -88,7 +89,16 @@ source .venv/bin/activate
 
 # Install dependencies
 pip install -r requirements.txt
+```
 
+2. **Configure Gemini Credentials:**
+Create a `.env` file in the `backend/` directory and write your Google Gemini API key:
+```env
+GEMINI_API_KEY=your_actual_gemini_api_key_here
+```
+
+3. **Boot the API service:**
+```powershell
 # Start local server (Runs on port 8000)
 python main.py
 ```
