@@ -161,45 +161,151 @@ MEAL_TEMPLATES = {
 }
 
 def get_fallback_plan(day_description: str, max_budget: float, cuisine_preference: str = "standard") -> PlanResponse:
-    if cuisine_preference == "indian":
-        plan_type = "indian"
-    elif cuisine_preference == "maharashtrian":
-        plan_type = "maharashtrian"
-    else:
-        desc_lower = day_description.lower()
-        if "vegan" in desc_lower or "plant" in desc_lower or "vegetarian" in desc_lower:
-            plan_type = "vegan"
-        elif "keto" in desc_lower or "low carb" in desc_lower or "high fat" in desc_lower:
-            plan_type = "keto"
-        else:
-            plan_type = "default"
-        
-    template = MEAL_TEMPLATES[plan_type]
-    meals = template["meals"]
-    total_cost = sum(m["cost"] for m in meals.values())
-    is_feasible = total_cost <= max_budget
-    remaining_balance = max_budget - total_cost
+    # Normalize inputs
+    cuisine = (cuisine_preference or "standard").lower()
     
-    grocery_list = [
-        GroceryItem(id=item["id"], item=item["item"], cost=item["cost"], checked=False)
-        for item in template["grocery_list"]
-    ]
-    substitutions = [
-        Substitution(original=s["original"], substitute=s["substitute"], reason=s["reason"])
-        for s in template["substitutions"]
-    ]
+    # If budget is ultra-low (under ₹50, down to ₹10)
+    if max_budget < 50:
+        total_cost = max(10.0, max_budget)
+        
+        # Proportional cost split:
+        breakfast_cost = round(total_cost * 0.30, 2)
+        lunch_cost = round(total_cost * 0.35, 2)
+        dinner_cost = round(total_cost - breakfast_cost - lunch_cost, 2)
+        
+        if cuisine == "maharashtrian":
+            meals = {
+                "breakfast": {
+                    "name": "Cutting Chai & Parle-G Biscuits",
+                    "cost": breakfast_cost,
+                    "description": "Traditional hot cutting chai paired with sweet glucose biscuits, a staple low-budget breakfast."
+                },
+                "lunch": {
+                    "name": "Pithla & 1 Jowar Bhakri with Thecha",
+                    "cost": lunch_cost,
+                    "description": "Nutritious and hot chickpea flour curry served with a single flatbread and spicy chili condiment."
+                },
+                "dinner": {
+                    "name": "Varan Bhaat (Lentil Rice)",
+                    "cost": dinner_cost,
+                    "description": "Steamed white rice topped with simple yellow split-pigeon-pea dal cooked with turmeric."
+                }
+            }
+            grocery = [
+                {"id": "flb1", "item": "Besan (Gram flour) & Jowar flour", "cost": round(lunch_cost * 0.6, 2), "checked": False},
+                {"id": "flb2", "item": "Chili, Garlic & Curry leaves", "cost": round(lunch_cost * 0.4, 2), "checked": False},
+                {"id": "flb3", "item": "Rice & Toor Dal", "cost": round(dinner_cost, 2), "checked": False},
+                {"id": "flb4", "item": "Tea leaves, Sugar & Milk", "cost": round(breakfast_cost * 0.7, 2), "checked": False},
+                {"id": "flb5", "item": "Parle-G Biscuit Packet", "cost": round(breakfast_cost * 0.3, 2), "checked": False}
+            ]
+            substitutions = [
+                {"original": "Milk tea", "substitute": "Black tea", "reason": "Bypasses milk expenses, saving ₹5-10 daily."},
+                {"original": "Jowar Bhakri", "substitute": "Wheat chapati", "reason": "Wheat flour is more economical if bought in bulk."}
+            ]
+        elif cuisine == "indian":
+            meals = {
+                "breakfast": {
+                    "name": "Masala Chai & Rusk Biscuits",
+                    "cost": breakfast_cost,
+                    "description": "Spiced black tea with a splash of milk, served with crunchy double-baked rusk toast."
+                },
+                "lunch": {
+                    "name": "Moong Dal Khichdi & Pickle",
+                    "cost": lunch_cost,
+                    "description": "One-pot comfort meal of rice and yellow split lentils, seasoned with cumin and turmeric, served with spicy pickle."
+                },
+                "dinner": {
+                    "name": "Plain Roti & Spiced Aloo Sabzi",
+                    "cost": dinner_cost,
+                    "description": "Handmade whole wheat flatbreads served with a simple dry potato curry seasoned with mustard seeds."
+                }
+            }
+            grocery = [
+                {"id": "flb1", "item": "Tea leaves, Ginger & Milk", "cost": round(breakfast_cost * 0.7, 2), "checked": False},
+                {"id": "flb2", "item": "Rusk Biscuits", "cost": round(breakfast_cost * 0.3, 2), "checked": False},
+                {"id": "flb3", "item": "Moong Dal & Rice", "cost": round(lunch_cost, 2), "checked": False},
+                {"id": "flb4", "item": "Potatoes & Spices", "cost": round(dinner_cost * 0.5, 2), "checked": False},
+                {"id": "flb5", "item": "Atta (Wheat flour) & Pickle", "cost": round(dinner_cost * 0.5, 2), "checked": False}
+            ]
+            substitutions = [
+                {"original": "Milk tea", "substitute": "Black tea", "reason": "Saves on milk cost while providing active caffeine stimulation."},
+                {"original": "Rusk", "substitute": "Homemade toasted chapati", "reason": "Reuses leftover rotis to avoid buying processed biscuits."}
+            ]
+        else:
+            meals = {
+                "breakfast": {
+                    "name": "Black Tea & Rolled Oats",
+                    "cost": breakfast_cost,
+                    "description": "Warm black tea served with plain boiled oats, high in fiber and low in price."
+                },
+                "lunch": {
+                    "name": "Boiled Chickpeas & Tomato Salad",
+                    "cost": lunch_cost,
+                    "description": "Protein-rich boiled chickpeas tossed with diced fresh tomatoes, salt, and lemon juice."
+                },
+                "dinner": {
+                    "name": "Stir-fried Cabbage & Rice",
+                    "cost": dinner_cost,
+                    "description": "Shredded cabbage sautéed with minimal oil and mustard seeds, served over white rice."
+                }
+            }
+            grocery = [
+                {"id": "flb1", "item": "Oats packet & Tea leaves", "cost": breakfast_cost, "checked": False},
+                {"id": "flb2", "item": "Dry chickpeas & Tomatoes", "cost": lunch_cost, "checked": False},
+                {"id": "flb3", "item": "Cabbage & Rice", "cost": dinner_cost, "checked": False}
+            ]
+            substitutions = [
+                {"original": "Cabbage", "substitute": "Onion & Potatoes", "reason": "Potatoes store longer and are cheap in bulk."},
+                {"original": "Oats", "substitute": "Puffed Rice (Kurmura)", "reason": "Puffed rice is lighter and extremely low-cost."}
+            ]
+            
+        # Ensure sum of groceries matches total_cost
+        groceries_sum = sum(item["cost"] for item in grocery)
+        diff = round(total_cost - groceries_sum, 2)
+        if diff != 0 and len(grocery) > 0:
+            grocery[0]["cost"] = round(grocery[0]["cost"] + diff, 2)
+
+        return PlanResponse(
+            is_feasible=True,
+            total_cost=total_cost,
+            remaining_balance=round(max_budget - total_cost, 2),
+            meals=meals,
+            grocery_list=grocery,
+            substitutions=substitutions
+        )
+
+    # Standard / templates fallback (budget >= 50)
+    template_key = cuisine if cuisine in MEAL_TEMPLATES else "default"
+    base_template = MEAL_TEMPLATES[template_key]
+    
+    scaled_meals = {}
+    for time, meal in base_template["meals"].items():
+        scaled_meals[time] = {
+            "name": meal["name"],
+            "cost": round(meal["cost"] * 10, 2),
+            "description": meal["description"]
+        }
+        
+    scaled_groceries = []
+    for item in base_template["grocery_list"]:
+        scaled_groceries.append({
+            "id": item["id"],
+            "item": item["item"],
+            "cost": round(item["cost"] * 10, 2),
+            "checked": False
+        })
+        
+    total_cost = sum(m["cost"] for m in scaled_meals.values())
+    is_feasible = total_cost <= max_budget
+    remaining_balance = round(max_budget - total_cost, 2)
     
     return PlanResponse(
         is_feasible=is_feasible,
-        total_cost=round(total_cost, 2),
-        remaining_balance=round(remaining_balance, 2),
-        meals={
-            "breakfast": MealDetail(**meals["breakfast"]),
-            "lunch": MealDetail(**meals["lunch"]),
-            "dinner": MealDetail(**meals["dinner"])
-        },
-        grocery_list=grocery_list,
-        substitutions=substitutions
+        total_cost=total_cost,
+        remaining_balance=remaining_balance,
+        meals=scaled_meals,
+        grocery_list=scaled_groceries,
+        substitutions=base_template["substitutions"]
     )
 
 @app.post("/api/generate-plan", response_model=PlanResponse)
@@ -228,12 +334,12 @@ async def generate_plan(request: PlanRequest):
     Generate a structured daily cooking plan, grocery checklist, and substitutions based on the user's inputs.
     
     User's Day Description: "{request.day_description}"
-    User's Max Budget: ${request.max_budget:.2f}
+    User's Max Budget: Rs. {request.max_budget:.2f}
     {cuisine_context}
     
     Provide a realistic menu with:
-    1. Breakfast, Lunch, and Dinner. Calculate individual estimated costs for each.
-    2. A comprehensive grocery list breakdown with individual item costs.
+    1. Breakfast, Lunch, and Dinner. Calculate individual estimated costs for each in Rupees.
+    2. A comprehensive grocery list breakdown with individual item costs in Rupees.
     3. 1-2 pro-tip ingredient substitutions comparing original ingredients with alternatives to save money.
     4. Calculate if total_cost <= max_budget. Set is_feasible = true if so, else false.
     5. Set remaining_balance = max_budget - total_cost.
@@ -273,7 +379,7 @@ async def generate_plan(request: PlanRequest):
         
         if response.status_code != 200:
             print(f"Gemini API returned error code {response.status_code}. Response: {response.text}")
-            return get_fallback_plan(request.day_description, request.max_budget)
+            return get_fallback_plan(request.day_description, request.max_budget, request.cuisine_preference)
             
         data = response.json()
         
@@ -299,7 +405,7 @@ async def generate_plan(request: PlanRequest):
 
     except Exception as e:
         print(f"Error calling Gemini API: {e}. Falling back to local plan generation.")
-        return get_fallback_plan(request.day_description, request.max_budget)
+        return get_fallback_plan(request.day_description, request.max_budget, request.cuisine_preference)
 
 if __name__ == "__main__":
     import uvicorn

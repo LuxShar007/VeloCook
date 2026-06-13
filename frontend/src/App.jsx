@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { 
   Sparkles, 
-  DollarSign, 
+  IndianRupee, 
   CheckSquare, 
   Square, 
   AlertTriangle, 
@@ -19,21 +19,21 @@ import {
 const MOCK_PLANS = {
   vegan: {
     is_feasible: true,
-    total_cost: 22.00,
-    remaining_balance: 8.00,
+    total_cost: 220.00,
+    remaining_balance: 80.00,
     meals: {
-      breakfast: { name: "Chia Seed & Coconut Pudding", cost: 4.50, description: "Chia seeds soaked in coconut milk, topped with fresh berries and crushed almonds." },
-      lunch: { name: "Mediterranean Chickpea Salad", cost: 8.00, description: "Tossed chickpeas, cucumber, cherry tomatoes, red onion, and parsley with a zesty lemon-tahini dressing." },
-      dinner: { name: "Lentil & Sweet Potato Curry", cost: 9.50, description: "Rich coconut-based curry loaded with red lentils, sweet potato cubes, and fresh spinach, served with brown rice." }
+      breakfast: { name: "Chia Seed & Coconut Pudding", cost: 45.00, description: "Chia seeds soaked in coconut milk, topped with fresh berries and crushed almonds." },
+      lunch: { name: "Mediterranean Chickpea Salad", cost: 80.00, description: "Tossed chickpeas, cucumber, cherry tomatoes, red onion, and parsley with a zesty lemon-tahini dressing." },
+      dinner: { name: "Lentil & Sweet Potato Curry", cost: 95.00, description: "Rich coconut-based curry loaded with red lentils, sweet potato cubes, and fresh spinach, served with brown rice." }
     },
     grocery_list: [
-      { id: "v1", item: "Chia seeds & Coconut milk", cost: 4.50 },
-      { id: "v2", item: "Fresh berries & Almonds", cost: 3.00 },
-      { id: "v3", item: "Canned chickpeas & Cucumbers", cost: 2.50 },
-      { id: "v4", item: "Cherry tomatoes & Red onions", cost: 2.50 },
-      { id: "v5", item: "Red lentils & Sweet potatoes", cost: 3.00 },
-      { id: "v6", item: "Spinach & Coconut milk (curry)", cost: 4.00 },
-      { id: "v7", item: "Brown rice", "cost": 2.50 }
+      { id: "v1", item: "Chia seeds & Coconut milk", cost: 45.00 },
+      { id: "v2", item: "Fresh berries & Almonds", cost: 30.00 },
+      { id: "v3", item: "Canned chickpeas & Cucumbers", cost: 25.00 },
+      { id: "v4", item: "Cherry tomatoes & Red onions", cost: 25.00 },
+      { id: "v5", item: "Red lentils & Sweet potatoes", cost: 30.00 },
+      { id: "v6", item: "Spinach & Coconut milk (curry)", cost: 40.00 },
+      { id: "v7", item: "Brown rice", "cost": 25.00 }
     ],
     substitutions: [
       { original: "Fresh berries", substitute: "Frozen mixed berries", reason: "Reduces budget cost by 40% while preserving nutritional value." },
@@ -42,21 +42,21 @@ const MOCK_PLANS = {
   },
   keto: {
     is_feasible: true,
-    total_cost: 30.50,
-    remaining_balance: -0.50,
+    total_cost: 305.00,
+    remaining_balance: -5.00,
     meals: {
-      breakfast: { name: "Avocado & Bacon Scramble", cost: 6.50, description: "Three eggs scrambled in grass-fed butter with crispy bacon pieces and half a fresh sliced avocado." },
-      lunch: { name: "Keto Caesar Salad with Chicken", cost: 9.50, description: "Romaine lettuce, grilled chicken breast, shaved parmesan, and creamy Caesar dressing." },
-      dinner: { name: "Garlic Butter Steak & Zucchini", cost: 14.50, description: "Pan-seared sirloin steak basted in garlic-herb butter, paired with sautéed zucchini spirals." }
+      breakfast: { name: "Avocado & Bacon Scramble", cost: 65.00, description: "Three eggs scrambled in grass-fed butter with crispy bacon pieces and half a fresh sliced avocado." },
+      lunch: { name: "Keto Caesar Salad with Chicken", cost: 95.00, description: "Romaine lettuce, grilled chicken breast, shaved parmesan, and creamy Caesar dressing." },
+      dinner: { name: "Garlic Butter Steak & Zucchini", cost: 145.00, description: "Pan-seared sirloin steak basted in garlic-herb butter, paired with sautéed zucchini spirals." }
     },
     grocery_list: [
-      { id: "k1", item: "Eggs & Butter", cost: 3.00 },
-      { id: "k2", item: "Bacon strips", cost: 3.50 },
-      { id: "k3", item: "Avocado", cost: 2.00 },
-      { id: "k4", item: "Chicken breast & Romaine lettuce", cost: 6.00 },
-      { id: "k5", item: "Caesar dressing & Parmesan", cost: 4.00 },
-      { id: "k6", item: "Sirloin steak", cost: 9.00 },
-      { id: "k7", item: "Zucchini spirals", cost: 3.00 }
+      { id: "k1", item: "Eggs & Butter", cost: 30.00 },
+      { id: "k2", item: "Bacon strips", cost: 35.00 },
+      { id: "k3", item: "Avocado", cost: 20.00 },
+      { id: "k4", item: "Chicken breast & Romaine lettuce", cost: 60.00 },
+      { id: "k5", item: "Caesar dressing & Parmesan", cost: 40.00 },
+      { id: "k6", item: "Sirloin steak", cost: 90.00 },
+      { id: "k7", item: "Zucchini spirals", cost: 30.00 }
     ],
     substitutions: [
       { original: "Sirloin steak", substitute: "Chicken thighs", reason: "Lowers protein cost by 55% while maintaining the high fat-to-protein ratio." },
@@ -65,20 +65,20 @@ const MOCK_PLANS = {
   },
   default: {
     is_feasible: true,
-    total_cost: 27.00,
-    remaining_balance: 3.00,
+    total_cost: 270.00,
+    remaining_balance: 30.00,
     meals: {
-      breakfast: { name: "Sourdough Toast & Poached Eggs", cost: 5.00, description: "Two organic poached eggs served on toasted artisanal sourdough bread with a drizzle of olive oil." },
-      lunch: { name: "Quinoa Salad with Grilled Chicken", cost: 9.00, description: "Fluffy quinoa mixed with diced cucumber, cherry tomatoes, and sliced grilled chicken breast." },
-      dinner: { name: "Pan-Seared Salmon with Asparagus", cost: 13.00, description: "Crispy skin-on salmon fillet basted with lemon butter, served alongside roasted asparagus." }
+      breakfast: { name: "Sourdough Toast & Poached Eggs", cost: 50.00, description: "Two organic poached eggs served on toasted artisanal sourdough bread with a drizzle of olive oil." },
+      lunch: { name: "Quinoa Salad with Grilled Chicken", cost: 90.00, description: "Fluffy quinoa mixed with diced cucumber, cherry tomatoes, and sliced grilled chicken breast." },
+      dinner: { name: "Pan-Seared Salmon with Asparagus", cost: 130.00, description: "Crispy skin-on salmon fillet basted with lemon butter, served alongside roasted asparagus." }
     },
     grocery_list: [
-      { id: "d1", item: "Sourdough bread", cost: 2.00 },
-      { id: "d2", item: "Eggs & Olive oil", cost: 3.00 },
-      { id: "d3", item: "Quinoa & Salad greens", cost: 3.50 },
-      { id: "d4", item: "Chicken breast", cost: 5.50 },
-      { id: "d5", item: "Salmon fillet", cost: 8.00 },
-      { id: "d6", item: "Asparagus & Lemon", cost: 5.00 }
+      { id: "d1", item: "Sourdough bread", cost: 20.00 },
+      { id: "d2", item: "Eggs & Olive oil", cost: 30.00 },
+      { id: "d3", item: "Quinoa & Salad greens", cost: 35.00 },
+      { id: "d4", item: "Chicken breast", cost: 55.00 },
+      { id: "d5", item: "Salmon fillet", cost: 80.00 },
+      { id: "d6", item: "Asparagus & Lemon", cost: 50.00 }
     ],
     substitutions: [
       { original: "Salmon fillet", substitute: "Rainbow Trout", reason: "Trout is often fresher locally and generally costs 25% less than salmon." },
@@ -87,21 +87,21 @@ const MOCK_PLANS = {
   },
   indian: {
     is_feasible: true,
-    total_cost: 18.00,
-    remaining_balance: 17.00,
+    total_cost: 180.00,
+    remaining_balance: 170.00,
     meals: {
-      breakfast: { name: "Masala Chai & Aloo Paratha", cost: 3.50, description: "Whole wheat flatbread stuffed with spiced mashed potatoes, served with plain curd and a cup of aromatic Masala Chai." },
-      lunch: { name: "Dal Tadka, Jeera Rice & Mixed Veg Sabzi", cost: 6.50, description: "Yellow lentil dal tempered with cumin, garlic, and ghee, served with cumin rice and a seasonal vegetable stir-fry." },
-      dinner: { name: "Paneer Bhurji & Whole Wheat Roti", cost: 8.00, description: "Scrambled cottage cheese cooked with onions, tomatoes, and spices, served with fresh handmade rotis." }
+      breakfast: { name: "Masala Chai & Aloo Paratha", cost: 35.00, description: "Whole wheat flatbread stuffed with spiced mashed potatoes, served with plain curd and a cup of aromatic Masala Chai." },
+      lunch: { name: "Dal Tadka, Jeera Rice & Mixed Veg Sabzi", cost: 65.00, description: "Yellow lentil dal tempered with cumin, garlic, and ghee, served with cumin rice and a seasonal vegetable stir-fry." },
+      dinner: { name: "Paneer Bhurji & Whole Wheat Roti", cost: 80.00, description: "Scrambled cottage cheese cooked with onions, tomatoes, and spices, served with fresh handmade rotis." }
     },
     grocery_list: [
-      { id: "in1", item: "Potatoes & Whole wheat flour", cost: 2.00 },
-      { id: "in2", item: "Masala tea leaves & Milk", cost: 1.50 },
-      { id: "in3", item: "Yellow lentils (Toor Dal)", cost: 2.00 },
-      { id: "in4", item: "Basmati rice & Cumin seeds", cost: 2.00 },
-      { id: "in5", item: "Mixed seasonal vegetables", cost: 2.50 },
-      { id: "in6", item: "Paneer (Cottage cheese)", cost: 4.50 },
-      { id: "in7", item: "Ghee & Spices", cost: 3.50 }
+      { id: "in1", item: "Potatoes & Whole wheat flour", cost: 20.00 },
+      { id: "in2", item: "Masala tea leaves & Milk", cost: 15.00 },
+      { id: "in3", item: "Yellow lentils (Toor Dal)", cost: 20.00 },
+      { id: "in4", item: "Basmati rice & Cumin seeds", cost: 20.00 },
+      { id: "in5", item: "Mixed seasonal vegetables", cost: 25.00 },
+      { id: "in6", item: "Paneer (Cottage cheese)", cost: 45.00 },
+      { id: "in7", item: "Ghee & Spices", cost: 35.00 }
     ],
     substitutions: [
       { original: "Paneer", substitute: "Tofu", reason: "Saves up to 30% on cost while maintaining low-carb protein values." },
@@ -110,21 +110,21 @@ const MOCK_PLANS = {
   },
   maharashtrian: {
     is_feasible: true,
-    total_cost: 14.50,
-    remaining_balance: 20.50,
+    total_cost: 145.00,
+    remaining_balance: 205.00,
     meals: {
-      breakfast: { name: "Kanda Poha & Solkadhi", cost: 3.00, description: "Flattened rice cooked with onions, peanuts, curry leaves, and mustard seeds, paired with a refreshing Solkadhi (kokum and coconut milk drink)." },
-      lunch: { name: "Pithla Bhakri with Hirvi Mirchi Thecha", cost: 5.00, description: "Thick chickpea flour curry (Pithla) served with traditional flatbread made of sorghum (Jowar Bhakri) and spicy crushed green chili condiment (Thecha)." },
-      dinner: { name: "Varan Bhaat, Batata Bhaji & Sajuk Tup", cost: 6.50, description: "Steamed rice topped with yellow split-pigeon-pea dal (Varan) and pure ghee (Sajuk Tup), served alongside tempered dry potato bhaji." }
+      breakfast: { name: "Kanda Poha & Solkadhi", cost: 30.00, description: "Flattened rice cooked with onions, peanuts, curry leaves, and mustard seeds, paired with a refreshing Solkadhi (kokum and coconut milk drink)." },
+      lunch: { name: "Pithla Bhakri with Hirvi Mirchi Thecha", cost: 50.00, description: "Thick chickpea flour curry (Pithla) served with traditional flatbread made of sorghum (Jowar Bhakri) and spicy crushed green chili condiment (Thecha)." },
+      dinner: { name: "Varan Bhaat, Batata Bhaji & Sajuk Tup", cost: 65.00, description: "Steamed rice topped with yellow split-pigeon-pea dal (Varan) and pure ghee (Sajuk Tup), served alongside tempered dry potato bhaji." }
     },
     grocery_list: [
-      { id: "mh1", item: "Poha (Flattened rice) & Peanuts", cost: 1.50 },
-      { id: "mh2", item: "Kokum & Coconut milk (Solkadhi)", cost: 1.50 },
-      { id: "mh3", item: "Besan (Gram flour) & Jowar flour", cost: 2.00 },
-      { id: "mh4", item: "Green chilies & Garlic", cost: 1.00 },
-      { id: "mh5", item: "Rice & Toor dal", cost: 2.00 },
-      { id: "mh6", item: "Potatoes & Onions", cost: 2.00 },
-      { id: "mh7", item: "Pure Ghee (Sajuk Tup)", cost: 4.50 }
+      { id: "mh1", item: "Poha (Flattened rice) & Peanuts", cost: 15.00 },
+      { id: "mh2", item: "Kokum & Coconut milk (Solkadhi)", cost: 15.00 },
+      { id: "mh3", item: "Besan (Gram flour) & Jowar flour", cost: 20.00 },
+      { id: "mh4", item: "Green chilies & Garlic", cost: 10.00 },
+      { id: "mh5", item: "Rice & Toor dal", cost: 20.00 },
+      { id: "mh6", item: "Potatoes & Onions", cost: 20.00 },
+      { id: "mh7", item: "Pure Ghee (Sajuk Tup)", cost: 45.00 }
     ],
     substitutions: [
       { original: "Kokum fruit extract", substitute: "Tamarind paste", reason: "If kokum is hard to find or premium, tamarind provides the necessary sour tang for Solkadhi at a lower cost." },
@@ -135,7 +135,7 @@ const MOCK_PLANS = {
 
 export default function App() {
   const [dayDescription, setDayDescription] = useState("Keto day with high-protein lunch and easy dinner");
-  const [maxBudget, setMaxBudget] = useState(35.00);
+  const [maxBudget, setMaxBudget] = useState(150.00);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [result, setResult] = useState(null);
@@ -252,23 +252,102 @@ export default function App() {
       setTimeout(() => {
         const descLower = dayDescription.toLowerCase();
         let simulatedPlan;
-
-        if (cuisinePreference === "indian") {
-          simulatedPlan = JSON.parse(JSON.stringify(MOCK_PLANS.indian));
-        } else if (cuisinePreference === "maharashtrian") {
-          simulatedPlan = JSON.parse(JSON.stringify(MOCK_PLANS.maharashtrian));
-        } else if (descLower.includes("vegan") || descLower.includes("plant") || descLower.includes("vegetarian")) {
-          simulatedPlan = JSON.parse(JSON.stringify(MOCK_PLANS.vegan));
-        } else if (descLower.includes("keto") || descLower.includes("low carb") || descLower.includes("high fat")) {
-          simulatedPlan = JSON.parse(JSON.stringify(MOCK_PLANS.keto));
-        } else {
-          simulatedPlan = JSON.parse(JSON.stringify(MOCK_PLANS.default));
-        }
-
-        // Adjust feasibility and remaining balance according to inputs dynamically
         const budget = parseFloat(maxBudget) || 0;
-        simulatedPlan.is_feasible = simulatedPlan.total_cost <= budget;
-        simulatedPlan.remaining_balance = budget - simulatedPlan.total_cost;
+
+        if (budget < 50) {
+          const total_cost = Math.max(10, budget);
+          const breakfast_cost = Math.round(total_cost * 0.3 * 100) / 100;
+          const lunch_cost = Math.round(total_cost * 0.35 * 100) / 100;
+          const dinner_cost = Math.round((total_cost - breakfast_cost - lunch_cost) * 100) / 100;
+          
+          if (cuisinePreference === "maharashtrian") {
+            simulatedPlan = {
+              is_feasible: true,
+              total_cost: total_cost,
+              remaining_balance: budget - total_cost,
+              meals: {
+                breakfast: { name: "Cutting Chai & Parle-G Biscuits", cost: breakfast_cost, description: "Traditional hot cutting chai paired with sweet glucose biscuits, a staple low-budget breakfast." },
+                lunch: { name: "Pithla & 1 Jowar Bhakri with Thecha", cost: lunch_cost, description: "Nutritious and hot chickpea flour curry served with a single flatbread and spicy chili condiment." },
+                dinner: { name: "Varan Bhaat (Lentil Rice)", cost: dinner_cost, description: "Steamed white rice topped with simple yellow split-pigeon-pea dal cooked with turmeric." }
+              },
+              grocery_list: [
+                { id: "flb1", item: "Besan (Gram flour) & Jowar flour", cost: Math.round(lunch_cost * 0.6 * 100) / 100 },
+                { id: "flb2", item: "Chili, Garlic & Curry leaves", cost: Math.round(lunch_cost * 0.4 * 100) / 100 },
+                { id: "flb3", item: "Rice & Toor Dal", cost: dinner_cost },
+                { id: "flb4", item: "Tea leaves, Sugar & Milk", cost: Math.round(breakfast_cost * 0.7 * 100) / 100 },
+                { id: "flb5", item: "Parle-G Biscuit Packet", cost: Math.round(breakfast_cost * 0.3 * 100) / 100 }
+              ],
+              substitutions: [
+                { original: "Milk tea", substitute: "Black tea", reason: "Bypasses milk expenses, saving ₹5-10 daily." },
+                { original: "Jowar Bhakri", substitute: "Wheat chapati", reason: "Wheat flour is more economical if bought in bulk." }
+              ]
+            };
+          } else if (cuisinePreference === "indian") {
+            simulatedPlan = {
+              is_feasible: true,
+              total_cost: total_cost,
+              remaining_balance: budget - total_cost,
+              meals: {
+                breakfast: { name: "Masala Chai & Rusk Biscuits", cost: breakfast_cost, description: "Spiced black tea with a splash of milk, served with crunchy double-baked rusk toast." },
+                lunch: { name: "Moong Dal Khichdi & Pickle", cost: lunch_cost, description: "One-pot comfort meal of rice and yellow split lentils, seasoned with cumin and turmeric, served with spicy pickle." },
+                dinner: { name: "Plain Roti & Spiced Aloo Sabzi", cost: dinner_cost, description: "Handmade whole wheat flatbreads served with a simple dry potato curry seasoned with mustard seeds." }
+              },
+              grocery_list: [
+                { id: "flb1", item: "Tea leaves, Ginger & Milk", cost: Math.round(breakfast_cost * 0.7 * 100) / 100 },
+                { id: "flb2", item: "Rusk Biscuits", cost: Math.round(breakfast_cost * 0.3 * 100) / 100 },
+                { id: "flb3", item: "Moong Dal & Rice", cost: lunch_cost },
+                { id: "flb4", item: "Potatoes & Spices", cost: Math.round(dinner_cost * 0.5 * 100) / 100 },
+                { id: "flb5", item: "Atta (Wheat flour) & Pickle", cost: Math.round(dinner_cost * 0.5 * 100) / 100 }
+              ],
+              substitutions: [
+                { original: "Milk tea", substitute: "Black tea", reason: "Saves on milk cost while providing active caffeine stimulation." },
+                { original: "Rusk", substitute: "Homemade toasted chapati", reason: "Reuses leftover rotis to avoid buying processed biscuits." }
+              ]
+            };
+          } else {
+            simulatedPlan = {
+              is_feasible: true,
+              total_cost: total_cost,
+              remaining_balance: budget - total_cost,
+              meals: {
+                breakfast: { name: "Black Tea & Rolled Oats", cost: breakfast_cost, description: "Warm black tea served with plain boiled oats, high in fiber and low in price." },
+                lunch: { name: "Boiled Chickpeas & Tomato Salad", cost: lunch_cost, description: "Protein-rich boiled chickpeas tossed with diced fresh tomatoes, salt, and lemon juice." },
+                dinner: { name: "Stir-fried Cabbage & Rice", cost: dinner_cost, description: "Shredded cabbage sautéed with minimal oil and mustard seeds, served over white rice." }
+              },
+              grocery_list: [
+                { id: "flb1", item: "Oats packet & Tea leaves", cost: breakfast_cost },
+                { id: "flb2", item: "Dry chickpeas & Tomatoes", cost: lunch_cost },
+                { id: "flb3", item: "Cabbage & Rice", cost: dinner_cost }
+              ],
+              substitutions: [
+                { original: "Cabbage", substitute: "Onion & Potatoes", reason: "Potatoes store longer and are cheap in bulk." },
+                { original: "Oats", substitute: "Puffed Rice (Kurmura)", reason: "Puffed rice is lighter and extremely low-cost." }
+              ]
+            };
+          }
+          // Adjust first item cost to match total_cost exactly if there's any float rounding discrepancy
+          const sumGroceries = simulatedPlan.grocery_list.reduce((acc, curr) => acc + curr.cost, 0);
+          const diff = Math.round((total_cost - sumGroceries) * 100) / 100;
+          if (diff !== 0 && simulatedPlan.grocery_list.length > 0) {
+            simulatedPlan.grocery_list[0].cost = Math.round((simulatedPlan.grocery_list[0].cost + diff) * 100) / 100;
+          }
+        } else {
+          if (cuisinePreference === "indian") {
+            simulatedPlan = JSON.parse(JSON.stringify(MOCK_PLANS.indian));
+          } else if (cuisinePreference === "maharashtrian") {
+            simulatedPlan = JSON.parse(JSON.stringify(MOCK_PLANS.maharashtrian));
+          } else if (descLower.includes("vegan") || descLower.includes("plant") || descLower.includes("vegetarian")) {
+            simulatedPlan = JSON.parse(JSON.stringify(MOCK_PLANS.vegan));
+          } else if (descLower.includes("keto") || descLower.includes("low carb") || descLower.includes("high fat")) {
+            simulatedPlan = JSON.parse(JSON.stringify(MOCK_PLANS.keto));
+          } else {
+            simulatedPlan = JSON.parse(JSON.stringify(MOCK_PLANS.default));
+          }
+
+          // Adjust feasibility and remaining balance according to inputs dynamically
+          simulatedPlan.is_feasible = simulatedPlan.total_cost <= budget;
+          simulatedPlan.remaining_balance = budget - simulatedPlan.total_cost;
+        }
         
         setResult(simulatedPlan);
         setApiOnline(false);
@@ -377,24 +456,31 @@ export default function App() {
                   <div className="flex flex-wrap gap-1.5">
                     <button
                       type="button"
-                      onClick={() => fillPreset("Keto day with high-protein lunch and easy dinner", 35.00)}
+                      onClick={() => fillPreset("Keto day with high-protein lunch and easy dinner", 350.00)}
                       className="text-[11px] bg-slate-100/80 hover:bg-slate-200/50 border border-slate-200 text-slate-600 hover:text-slate-800 px-2.5 py-1 rounded transition-all cursor-pointer"
                     >
-                      ⚡ Keto ($35)
+                      ⚡ Keto (₹350)
                     </button>
                     <button
                       type="button"
-                      onClick={() => fillPreset("Vegan cleansing day with fresh vegetable focus", 25.00)}
+                      onClick={() => fillPreset("Vegan cleansing day with fresh vegetable focus", 250.00)}
                       className="text-[11px] bg-slate-100/80 hover:bg-slate-200/50 border border-slate-200 text-slate-600 hover:text-slate-800 px-2.5 py-1 rounded transition-all cursor-pointer"
                     >
-                      🌱 Vegan ($25)
+                      🌱 Vegan (₹250)
                     </button>
                     <button
                       type="button"
-                      onClick={() => fillPreset("Busy corporate meeting day with easy prep comfort food", 18.00)}
+                      onClick={() => fillPreset("Busy corporate meeting day with easy prep comfort food", 180.00)}
                       className="text-[11px] bg-slate-100/80 hover:bg-slate-200/50 border border-slate-200 text-slate-600 hover:text-slate-800 px-2.5 py-1 rounded transition-all cursor-pointer"
                     >
-                      💼 Tight Budget ($18)
+                      💼 Tight Budget (₹180)
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => fillPreset("Simple traditional Indian local diet day", 20.00)}
+                      className="text-[11px] bg-slate-100/80 hover:bg-slate-200/50 border border-slate-200 text-slate-600 hover:text-slate-800 px-2.5 py-1 rounded transition-all cursor-pointer"
+                    >
+                      🚩 Cheap/Local (₹20)
                     </button>
                   </div>
                 </div>
@@ -418,19 +504,19 @@ export default function App() {
 
               <div>
                 <label htmlFor="max-budget" className="block text-xs font-bold text-emerald-700 uppercase tracking-wider mb-2">
-                  Max Budget ($)
+                  Max Budget (₹)
                 </label>
                 <div className="relative">
                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <DollarSign className="h-4.5 w-4.5 text-emerald-600" />
+                    <IndianRupee className="h-4.5 w-4.5 text-emerald-600" />
                   </div>
                   <input
                     id="max-budget"
                     type="number"
                     step="0.01"
-                    min="1"
+                    min="10"
                     className="w-full bg-slate-50 border border-slate-200 hover:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 rounded-lg py-2.5 pl-9 pr-3 text-sm text-slate-800 placeholder-slate-400 font-medium transition-colors"
-                    placeholder="e.g. 30.00"
+                    placeholder="e.g. 150.00"
                     value={maxBudget}
                     onChange={(e) => setMaxBudget(e.target.value)}
                     required
@@ -498,7 +584,7 @@ export default function App() {
                 {/* PDF Print Header (Hidden on Screen, Shown on Print) */}
                 <div className="hidden print-report-header">
                   <h2>VeloCook Analysis & Sourcing Report</h2>
-                  <p>Generated on {new Date().toLocaleDateString()} | Budget Limit: ${parseFloat(maxBudget).toFixed(2)}</p>
+                  <p>Generated on {new Date().toLocaleDateString()} | Budget Limit: ₹{parseFloat(maxBudget).toFixed(2)}</p>
                 </div>
 
                 {/* Dashboard Header with PDF Export Button */}
@@ -556,7 +642,7 @@ export default function App() {
                   <div className="flex items-center gap-5 border-t sm:border-t-0 sm:border-l border-slate-200/80 pt-3 sm:pt-0 sm:pl-5 shrink-0 justify-between sm:justify-start">
                     <div>
                       <div className="text-[10px] text-slate-500 font-bold uppercase tracking-wider mb-0.5">Total Cost</div>
-                      <div className="text-xl font-bold text-slate-800">${result.total_cost.toFixed(2)}</div>
+                      <div className="text-xl font-bold text-slate-800">₹{result.total_cost.toFixed(2)}</div>
                     </div>
                     <div>
                       <div className="text-[10px] text-slate-500 font-bold uppercase tracking-wider mb-0.5">
@@ -565,7 +651,7 @@ export default function App() {
                       <div className={`text-xl font-bold ${
                         result.remaining_balance >= 0 ? 'text-emerald-600' : 'text-rose-600'
                       }`}>
-                        {result.remaining_balance >= 0 ? '+' : ''}${result.remaining_balance.toFixed(2)}
+                        {result.remaining_balance >= 0 ? '+' : ''}₹{result.remaining_balance.toFixed(2)}
                       </div>
                     </div>
                   </div>
@@ -588,7 +674,7 @@ export default function App() {
                               {time}
                             </span>
                             <span className="text-xs font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-100">
-                              ${meal.cost.toFixed(2)}
+                              ₹{meal.cost.toFixed(2)}
                             </span>
                           </div>
                           <h5 className="text-slate-800 font-semibold text-sm tracking-tight mb-1">
@@ -651,7 +737,7 @@ export default function App() {
                               </span>
                             </div>
                             <span className={`font-bold shrink-0 ${isChecked ? 'text-slate-400' : 'text-emerald-600'}`}>
-                              ${item.cost.toFixed(2)}
+                              ₹{item.cost.toFixed(2)}
                             </span>
                           </button>
                         </li>
